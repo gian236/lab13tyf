@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 13 — Token Due Diligence | TechFreedom</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-surface: #0f172a;
+      --bg-surface-elevated: #1e293b;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --border-subtle: rgba(148, 163, 184, 0.12);
+      --border-highlight: rgba(56, 189, 248, 0.3);
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --accent-cyan: #06b6d4;
+      --accent-sky: #38bdf8;
+      --accent-doge: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-purple: #8b5cf6;
+      
+      --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      font-size: 15px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    a {
+      color: var(--accent-sky);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    /* Header Nav */
+    header.top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 13, 22, 0.85);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+    }
+    .brand-tag {
+      background: linear-gradient(135deg, var(--accent-sky), var(--accent-purple));
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 800;
+    }
+    nav.nav-links {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    nav.nav-links a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.2s;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    nav.nav-links a:hover, nav.nav-links a.active {
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* Hero Section */
+    .hero-banner {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 48px 40px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-doge), var(--accent-sky), var(--accent-purple));
+    }
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+    .pill.highlight {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: var(--accent-sky);
+    }
+    h1.hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 3.8vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 860px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    /* Key Indicators Grid */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-highlight);
+    }
+    .stat-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .stat-card .value {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .stat-card .sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Section Styling */
+    section.content-section {
+      margin-bottom: 56px;
+      scroll-margin-top: 80px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-num {
+      color: var(--accent-sky);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+    }
+
+    /* Versus Comparison Cards */
+    .vs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 860px) {
+      .vs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .asset-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .asset-card.doge {
+      border-top: 4px solid var(--accent-doge);
+    }
+    .asset-card.mmlti {
+      border-top: 4px solid var(--accent-sky);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .asset-name {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 700;
+    }
+    .asset-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .badge-doge {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-doge);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-mmlti {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-sky);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .key-value-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .kv-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      font-size: 0.88rem;
+    }
+    .kv-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .kv-label {
+      color: var(--text-muted);
+    }
+    .kv-val {
+      font-weight: 600;
+      color: #fff;
+      font-family: var(--font-mono);
+      text-align: right;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .callout-warning {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      color: #fecdd3;
+    }
+    .callout-warning strong {
+      color: #ffe4e6;
+    }
+    .callout-info {
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      color: #cffafe;
+    }
+    .callout-info strong {
+      color: #e0f2fe;
+    }
+
+    /* Code Blocks and Explorer Box */
+    .code-box {
+      background: #050811;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      overflow-x: auto;
+      margin: 16px 0;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    .code-box .kw { color: #f43f5e; font-weight: 600; }
+    .code-box .fn { color: #38bdf8; font-weight: 600; }
+    .code-box .addr { color: #f59e0b; }
+    .code-box .cm { color: #64748b; font-style: italic; }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      margin: 20px 0;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    table.data-table th {
+      background: rgba(30, 41, 59, 0.7);
+      padding: 14px 18px;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      color: #fff;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+      color: #f1f5f9;
+    }
+
+    /* Badges */
+    .status-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .status-confirmed {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-inconsistent {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--accent-rose);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .status-partial {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-doge);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .status-unconfirmed {
+      background: rgba(100, 116, 139, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+
+    /* Rubric Progress Bars */
+    .rubric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin: 24px 0;
+    }
+    .rubric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .rubric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .rubric-title {
+      font-weight: 700;
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+    }
+    .rubric-score {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+    .rubric-bar-container {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .rubric-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 1s ease-in-out;
+    }
+    .fill-doge { background: linear-gradient(90deg, var(--accent-doge), #fbbf24); }
+    .fill-mmlti { background: linear-gradient(90deg, var(--accent-sky), var(--accent-cyan)); }
+
+    .score-breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sb-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .sb-row .pts {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Memo Sections */
+    .memo-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 24px 0;
+    }
+    .memo-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.85rem;
+    }
+    .memo-meta div strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .memo-content {
+      font-size: 0.96rem;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+    .memo-content h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: #fff;
+      margin: 28px 0 12px;
+    }
+    .memo-content p {
+      margin-bottom: 18px;
+    }
+    .memo-content blockquote {
+      border-left: 3px solid var(--accent-sky);
+      padding-left: 18px;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Q&A Accordion Style */
+    .qa-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .qa-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .qa-item:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .qa-question {
+      padding: 18px 22px;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      font-size: 0.98rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .qa-question::after {
+      content: '▾';
+      font-size: 1.1rem;
+      color: var(--accent-sky);
+      transition: transform 0.2s ease;
+    }
+    .qa-item.open .qa-question::after {
+      transform: rotate(180deg);
+    }
+    .qa-answer {
+      padding: 0 22px 18px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      display: none;
+    }
+    .qa-item.open .qa-answer {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--text-muted); }
+
+    /* Interactive Filters */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent-sky);
+      color: #090d16;
+      border-color: var(--accent-sky);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-inner">
+      <div class="brand-badge">
+        <span>Lab 13</span>
+        <span class="brand-tag">TechFreedom</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#resumen">Resumen</a>
+        <a href="#doge">Kickoff DOGE</a>
+        <a href="#mmlti1">Emisión MMLTI1</a>
+        <a href="#smart-contract">Auditoría Smart Contract</a>
+        <a href="#claims">Claims vs Realidad</a>
+        <a href="#rubrica">Rúbrica Oficial (10 pts)</a>
+        <a href="#memo">Memo Comparativo</a>
+        <a href="#qa">Banco de Preguntas</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="meta-pills">
+        <span class="pill highlight">CS031 · Módulo 7: Tokenomics</span>
+        <span class="pill">Sesión 15 — Due Diligence</span>
+        <span class="pill">12 Oct 2026 · 23:40 CST (America/Guatemala)</span>
+        <span class="pill">Objetivo: Auditar, No Diseñar</span>
+      </div>
+      <h1 class="hero-title">Token Due Diligence: Fair-Launch vs. Deuda Regulada</h1>
+      <p class="hero-subtitle">
+        Auditoría técnica forense y análisis documental contrastando la mecánica abierta sin intermediarios de <strong>Dogecoin (DOGE)</strong> frente a la emisión pública regulada <strong>MMLTI1 (MultiMoney / TOHKN)</strong> bajo la Ley de Emisión de Activos Digitales (LEAD) de El Salvador.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="label">Meme Coin (DOGE)</div>
+          <div class="value" style="color: var(--accent-doge);">$13.22B</div>
+          <div class="sub">Market Cap · $854M Vol 24h</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Emisión Tohkn (MMLTI1)</div>
+          <div class="value" style="color: var(--accent-sky);">6.20% Fijo</div>
+          <div class="sub">Bono de Deuda Senior · 24 Meses</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Auditoría On-Chain</div>
+          <div class="value" style="color: var(--accent-rose);">No Verificado</div>
+          <div class="sub">Bytecode en Polygon · 46 Selectores</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Score Rúbrica S15</div>
+          <div class="value">DOGE: 7.5 | MMLTI: 5.5</div>
+          <div class="sub">Ambos > 50% (Aprobados)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 1: Resumen Ejecutivo -->
+    <section id="resumen" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">01.</span> Resumen Ejecutivo y Matriz Comparativa</h2>
+      </div>
+
+      <div class="vs-grid">
+        <div class="asset-card doge">
+          <div class="card-top">
+            <div>
+              <div class="asset-name">Dogecoin (DOGE)</div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Emisión Abierta · Fair-Launch Puro</p>
+            </div>
+            <span class="asset-badge badge-doge">POW LAYER 1</span>
+          </div>
+          <div class="key-value-list">
+            <div class="kv-item">
+              <span class="kv-label">Mecanismo de Consenso</span>
+              <span class="kv-val">Proof-of-Work (Scrypt)</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Asignación para Fundadores</span>
+              <span class="kv-val">0% (Cero Insiders)</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Acceso a la Red</span>
+              <span class="kv-val" style="color: var(--accent-emerald);">Permissionless Total</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Llaves Maestras / Admin Keys</span>
+              <span class="kv-val" style="color: var(--accent-emerald);">Inexistentes</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Riesgo Dominante</span>
+              <span class="kv-val" style="color: var(--accent-rose);">Mercado y Volatilidad</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="asset-card mmlti">
+          <div class="card-top">
+            <div>
+              <div class="asset-name">MultiMoney (MMLTI1)</div>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Token de Deuda · Emisión LEAD El Salvador</p>
+            </div>
+            <span class="asset-badge badge-mmlti">POLYGON ERC-3643</span>
+          </div>
+          <div class="key-value-list">
+            <div class="kv-item">
+              <span class="kv-label">Entidad Emisora</span>
+              <span class="kv-val">Sociedad Ahorro y Crédito MultiMoney</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Registro Regulatorio</span>
+              <span class="kv-val">CNAD AD-00252 / SSF</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Acceso a la Red</span>
+              <span class="kv-val" style="color: var(--accent-doge);">KYC / Whitelist Obligatorio</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Llaves Maestras / Admin Keys</span>
+              <span class="kv-val" style="color: var(--accent-rose);">Pause, Freeze, ForcedTransfer</span>
+            </div>
+            <div class="kv-item">
+              <span class="kv-label">Riesgo Dominante</span>
+              <span class="kv-val" style="color: var(--accent-rose);">Crédito Quirografario e Iliquidez</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warning">
+        <strong>Hallazgo Central del Laboratorio:</strong> La regulación formal bajo la Ley de Emisión de Activos Digitales (LEAD) y la supervisión de la Comisión Nacional de Activos Digitales (CNAD) aportan certidumbre jurídica al reclamo crediticio de MMLTI1, pero a costa de eliminar la soberanía tecnológica del tenedor mediante funciones de censura on-chain (ERC-3643). Además, el contrato en producción permanece <em>no verificado</em> en PolygonScan, contradiciendo el principio de máxima transparencia de blockchain.
+      </div>
+    </section>
+
+    <!-- Section 2: Kickoff Meme Coin (DOGE) -->
+    <section id="doge" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">02.</span> Kickoff: Auditoría de Dogecoin (DOGE)</h2>
+      </div>
+
+      <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Evaluación de mercado en tiempo real ejecutada sobre el libro de órdenes Spot de Binance y datos consolidados multicambio.
+      </p>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Parámetro</th>
+              <th>Dato Auditado</th>
+              <th>Fuente y Evidencia Técnica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ticker & Red</strong></td>
+              <td><code>DOGE</code> (Dogecoin L1)</td>
+              <td>Blockchain nativa Scrypt AuxPoW fusionada con Litecoin</td>
+            </tr>
+            <tr>
+              <td><strong>Venue de Consulta</strong></td>
+              <td>Binance Spot (<code>DOGE/USDT</code>)</td>
+              <td>API pública oficial de Binance a las 23:40 CST (UTC-6)</td>
+            </tr>
+            <tr>
+              <td><strong>Precio al Momento</strong></td>
+              <td><strong style="color: #fff;">$0.08475 USDT</strong></td>
+              <td>Rango 24h: Mín $0.08004 / Máx $0.08797 USDT</td>
+            </tr>
+            <tr>
+              <td><strong>Market Cap</strong></td>
+              <td><strong>$13,221,459,279 USD</strong></td>
+              <td>CoinGecko (Circulante: 156.30B DOGE)</td>
+            </tr>
+            <tr>
+              <td><strong>Volumen Spot 24h</strong></td>
+              <td>$73,013,649 USDT (868,485,162 DOGE)</td>
+              <td>482,667 transacciones ejecutadas en el par en Binance</td>
+            </tr>
+            <tr>
+              <td><strong>Volumen Global 24h</strong></td>
+              <td><strong>$854,054,862 USD</strong></td>
+              <td>CoinGecko consolidado multicambio</td>
+            </tr>
+            <tr>
+              <td><strong>Flujo Taker Vendedor 24h</strong></td>
+              <td><span class="status-badge status-partial">55.28% Ventas</span> (Ratio: 0.8088)</td>
+              <td>Binance Futures DOGEUSDT 24h Taker metrics (2.78B DOGE vendidos)</td>
+            </tr>
+            <tr>
+              <td><strong>Cuentas Top Traders</strong></td>
+              <td>75.50% Longs vs 24.50% Shorts</td>
+              <td>Binance Futures Top Long/Short Account Ratio: 3.0817</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3: Emisión Tohkn (MMLTI1) -->
+    <section id="mmlti1" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">03.</span> Emisión Pública Tohkn: MultiMoney MMLTI1</h2>
+      </div>
+
+      <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Análisis de prospecto y expedientes regulatorios para el Tramo 1 del Programa MMY en la plataforma TOHKN.
+      </p>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Condición Contractual</th>
+              <th>Referencia Documental</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Emisor y Tipo de Entidad</strong></td>
+              <td>Sociedad de Ahorro y Crédito MultiMoney, S.A.</td>
+              <td>Supervisada por la SSF; Registro Emisor CNAD: <code>EAD-0046</code></td>
+            </tr>
+            <tr>
+              <td><strong>Plataforma & PSAD</strong></td>
+              <td>TOHKN (Operada por MIO3, S.A. de C.V.)</td>
+              <td>Proveedor de Servicios de Activos Digitales: <code>PSAD-0016</code></td>
+            </tr>
+            <tr>
+              <td><strong>Certificador Independiente</strong></td>
+              <td>Armor Analytics, S.A. de C.V.</td>
+              <td>Registro CNAD: <code>CERT-0005</code> (Dictamen de 42 páginas)</td>
+            </tr>
+            <tr>
+              <td><strong>Naturaleza del Token</strong></td>
+              <td>Token de Deuda Senior Quirografario</td>
+              <td>Derecho de crédito puro; sin garantía real ni colateral de activos</td>
+            </tr>
+            <tr>
+              <td><strong>Monto del Primer Tramo</strong></td>
+              <td>Hasta $2,000,000.00 USD (Programa de hasta $10M)</td>
+              <td>DIR Cláusula 4.2 (Hasta 20,000 tokens a $100.00 nominal)</td>
+            </tr>
+            <tr>
+              <td><strong>Tasa de Interés Nominal</strong></td>
+              <td><strong style="color: var(--accent-emerald);">6.20% Anual Fija</strong></td>
+              <td>Intereses mensuales exigibles el último día hábil de cada mes</td>
+            </tr>
+            <tr>
+              <td><strong>Costo Financiero Efectivo Emisor</strong></td>
+              <td><strong style="color: var(--accent-doge);">~6.97% Anual</strong></td>
+              <td>Informe Certificación pág. 27 (Considerando fees de emisión)</td>
+            </tr>
+            <tr>
+              <td><strong>Plazo y Estructura de Pago</strong></td>
+              <td>24 Meses (Estructura Bullet)</td>
+              <td>Capital reembolsable en un solo pago al vencimiento</td>
+            </tr>
+            <tr>
+              <td><strong>Restricción de Transferencia</strong></td>
+              <td><span class="status-badge status-inconsistent">Lock-up 180 Días</span></td>
+              <td>Inmovilización tecnológica obligatoria en billetera del titular</td>
+            </tr>
+            <tr>
+              <td><strong>Mercado Secundario</strong></td>
+              <td>Restringido / Iliquidez Estructural</td>
+              <td>Términos Cláusula 7: Ni el Emisor ni MIO3 garantizan liquidez ni recompra</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 4: Smart Contract Forensic Audit -->
+    <section id="smart-contract" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">04.</span> Auditoría Forense On-Chain del Smart Contract</h2>
+      </div>
+
+      <div class="callout callout-warning">
+        <strong>Discrepancia Documental y Trazabilidad:</strong> La landing page de TOHKN no publica ninguna dirección de contrato. Al revisar los expedientes, el DIR oficial señala la dirección en Polygon Mainnet <code>0x6682b57FA1148b3831aE8610cd6Cbe961d610329</code>, mientras que el Informe de Certificación de Armor Analytics auditó <code>0x40bC415Fb08b49DC6853F067E61A1a4FF7490559</code> admitiendo que se ejecutó sobre <strong>BSC Testnet</strong> antes de migrar.
+      </div>
+
+      <div class="code-box">
+<span class="cm">// ARQUITECTURA DE TRES CAPAS IDENTIFICADA EN POLYGON MAINNET</span>
+<span class="kw">1. TokenProxy (Almacenamiento y Entrada):</span>
+   Dirección: <span class="addr">0x6682b57FA1148b3831aE8610cd6Cbe961d610329</span>
+   Estado en PolygonScan: <span class="kw">UNVERIFIED (Código fuente no verificado)</span>
+   Bytecode: 1,610 bytes (3,220 hex chars)
+   Slot ImplementationAuthority (<span class="fn">0xc5f16f0...</span>): <span class="addr">0x387b9ced9a3e638168dbd4992d06a0b5ba6ece18</span>
+
+<span class="kw">2. ImplementationAuthority (Gobernador de Lógica y Upgrades):</span>
+   Dirección: <span class="addr">0x387b9ced9a3e638168dbd4992d06a0b5ba6ece18</span>
+   Owner IA: <span class="addr">0x0921785a4b0f184141a9afff0f8b3b37e50caf46</span>
+   Llamada de resolución (<span class="fn">0x709bc7f3</span>) -> Apunta al contrato lógico: <span class="addr">0x1ba05496ec2bf932d522d0e2820428ca78f7a317</span>
+
+<span class="kw">3. Logic Implementation (Estándar ERC-3643 / T-REX):</span>
+   Dirección: <span class="addr">0x1ba05496ec2bf932d522d0e2820428ca78f7a317</span>
+   Bytecode: 14,415 bytes (28,830 hex chars) · 46 selectores de función despachados
+      </div>
+
+      <h3 style="font-family: var(--font-heading); margin: 24px 0 12px; font-size: 1.15rem;">Lectura de Variables de Estado On-Chain (Polygon RPC)</h3>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Función Selector</th>
+              <th>Firma EVM</th>
+              <th>Valor Retornado On-Chain</th>
+              <th>Evaluación Forense</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>0x06fdde03</code></td>
+              <td><code>name()</code></td>
+              <td><code>"MIO3 MM Tokenized Senior Debt Note Tranch 1"</code></td>
+              <td><span class="status-badge status-confirmed">Confirmado</span> Coincide con Tramo 1</td>
+            </tr>
+            <tr>
+              <td><code>0x95d89b41</code></td>
+              <td><code>symbol()</code></td>
+              <td><code>"MMLTI1"</code></td>
+              <td><span class="status-badge status-confirmed">Confirmado</span> Ticker oficial</td>
+            </tr>
+            <tr>
+              <td><code>0x313ce567</code></td>
+              <td><code>decimals()</code></td>
+              <td><code>18</code> (0x12)</td>
+              <td><span class="status-badge status-confirmed">Confirmado</span> 18 Decimales estándar</td>
+            </tr>
+            <tr>
+              <td><code>0x18160ddd</code></td>
+              <td><code>totalSupply()</code></td>
+              <td><code>2,000,000 * 10^18</code></td>
+              <td><span class="status-badge status-inconsistent">Inconsistencia</span> 2M tokens acuñados vs 20k tokens a $100</td>
+            </tr>
+            <tr>
+              <td><code>0x8da5cb5b</code></td>
+              <td><code>owner()</code></td>
+              <td><code>0xc7369964d6151fc0c095d5781b30eb3b80562a59</code></td>
+              <td><span class="status-badge status-partial">Centralizado</span> Administrador omnipotente</td>
+            </tr>
+            <tr>
+              <td><code>0x5c975abb</code></td>
+              <td><code>paused()</code></td>
+              <td><code>false</code> (0x00)</td>
+              <td><span class="status-badge status-confirmed">Activo</span> Contrato no pausado actualmente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-family: var(--font-heading); margin: 24px 0 12px; font-size: 1.15rem;">Matriz de Funciones Privilegiadas (Selectores ERC-3643)</h3>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Selector</th>
+              <th>Función Decodificada</th>
+              <th>Rol Autorizado</th>
+              <th>Impacto Directo sobre el Inversionista</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>0x8456cb59</code> / <code>0x3f4ba83a</code></td>
+              <td><code>pause()</code> / <code>unpause()</code></td>
+              <td>Owner / Agent</td>
+              <td>Congela globalmente todas las transferencias de tokens en la red.</td>
+            </tr>
+            <tr>
+              <td><code>0xc69c09cf</code> / <code>0x1a7af379</code></td>
+              <td><code>setAddressFrozen()</code> / <code>batch...</code></td>
+              <td>Agent</td>
+              <td>Inmoviliza la billetera de un usuario particular por decisión administrativa o judicial.</td>
+            </tr>
+            <tr>
+              <td><code>0x125c4a33</code> / <code>0x1fe56f7d</code></td>
+              <td><code>freezePartialTokens()</code> / <code>unfreeze...</code></td>
+              <td>Agent</td>
+              <td>Bloquea un monto parcial del saldo de un usuario sin congelar toda la cuenta.</td>
+            </tr>
+            <tr>
+              <td><code>0x9fc1d0e7</code> / <code>0x42a47abc</code></td>
+              <td><code>forcedTransfer()</code> / <code>batch...</code></td>
+              <td>Agent</td>
+              <td><strong style="color: var(--accent-rose);">Confiscación forzosa:</strong> Transfiere tokens de un usuario a otro sin su firma.</td>
+            </tr>
+            <tr>
+              <td><code>0x9dc29fac</code> / <code>0x4a6cc677</code></td>
+              <td><code>burn()</code> / <code>batchBurn()</code></td>
+              <td>Agent</td>
+              <td>Destruye tokens en billeteras de usuarios existentes.</td>
+            </tr>
+            <tr>
+              <td><code>0x40c10f19</code> / <code>0x68573107</code></td>
+              <td><code>mint()</code> / <code>batchMint()</code></td>
+              <td>Agent</td>
+              <td>Acuña nuevos tokens sin límite algorítmico on-chain rígido.</td>
+            </tr>
+            <tr>
+              <td><code>0x9285948a</code></td>
+              <td><code>recoveryAddress(...)</code></td>
+              <td>Agent</td>
+              <td>Recuperación de activos por pérdida de llaves o reasignación obligatoria.</td>
+            </tr>
+            <tr>
+              <td><code>0x709bc7f3</code></td>
+              <td><code>setImplementation(...)</code> (IA)</td>
+              <td>Owner IA</td>
+              <td><strong style="color: var(--accent-rose);">Upgradeability Total:</strong> Puede sustituir todo el código por una lógica arbitraria.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 5: Claims vs Realidad -->
+    <section id="claims" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">05.</span> Tabla de Auditoría: Claims vs. Realidad</h2>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterClaims('all')">Todos los Claims</button>
+        <button class="filter-btn" onclick="filterClaims('inconsistent')">Inconsistencias & Alertas</button>
+        <button class="filter-btn" onclick="filterClaims('confirmed')">Confirmados</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table" id="claims-table">
+          <thead>
+            <tr>
+              <th>Claim Público</th>
+              <th>Fuente</th>
+              <th>Evidencia Técnica o Documental</th>
+              <th>Resultado</th>
+              <th>Riesgo para el Inversionista</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-status="inconsistent">
+              <td><strong>Tasa Fija 6.20% Anual</strong></td>
+              <td>Landing TOHKN</td>
+              <td>DIR estipula 6.20% nominal. Certificación pág. 27 calcula costo financiero del 6.97% para MultiMoney por comisiones. MultiMoney coloca su cartera al >30% anual.</td>
+              <td><span class="status-badge status-inconsistent">Inconsistente</span></td>
+              <td>El inversor asume riesgo de crédito quirografario por un cupón modesto mientras el emisor retiene un spread masivo de intermediación.</td>
+            </tr>
+            <tr data-status="confirmed">
+              <td><strong>Derechos de Deuda (No Acciones)</strong></td>
+              <td>DIR & Términos</td>
+              <td>DIR Cláusula 8.1 y Términos Cláusula 3: Es un derecho crediticio no subordinado y no garantizado frente al emisor.</td>
+              <td><span class="status-badge status-confirmed">Confirmado</span></td>
+              <td>Si MultiMoney entra en liquidación, el inversor concurre como acreedor común quirografario sin respaldo de colateral real.</td>
+            </tr>
+            <tr data-status="inconsistent">
+              <td><strong>Propiedad sobre MultiMoney</strong></td>
+              <td>Mito Común Retail</td>
+              <td>Términos Cláusula 3: Los tokens no representan acciones, votos, equity ni derecho a dividendos.</td>
+              <td><span class="status-badge status-unconfirmed">No Confirmado</span></td>
+              <td>Cero participación patrimonial ni control corporativo.</td>
+            </tr>
+            <tr data-status="inconsistent">
+              <td><strong>Liquidez Garantizada</strong></td>
+              <td>Marketing TOHKN</td>
+              <td>Términos Cláusula 7: "No existe garantía de liquidez ni obligación de recompra". Lock-up obligatorio de 180 días en código.</td>
+              <td><span class="status-badge status-inconsistent">Inconsistente</span></td>
+              <td>Iliquidez forzosa absoluta; imposible salir de la posición ante eventos de estrés de mercado.</td>
+            </tr>
+            <tr data-status="inconsistent">
+              <td><strong>Transferibilidad Abierta Web3</strong></td>
+              <td>Narrativa Cripto</td>
+              <td>Contrato Polygon: Selectores 0x134e18f4 (Identity Registry) y 0xc69c09cf (freeze) restringen transferencias solo a whitelisted.</td>
+              <td><span class="status-badge status-unconfirmed">No Confirmado</span></td>
+              <td>El token no puede transferirse libremente fuera de la app de TOHKN ni usarse en protocolos DeFi o DEX.</td>
+            </tr>
+            <tr data-status="confirmed">
+              <td><strong>Período de Inmovilización (180 Días)</strong></td>
+              <td>DIR & Términos</td>
+              <td>Términos Cláusula 8.2: Inmovilización tecnológica de 180 días calendario desde la adquisición.</td>
+              <td><span class="status-badge status-confirmed">Confirmado</span></td>
+              <td>Imposibilidad jurídica y técnica de vender durante medio año.</td>
+            </tr>
+            <tr data-status="partial">
+              <td><strong>Regulación y Respaldo Estatal</strong></td>
+              <td>Prensa & LEAD</td>
+              <td>Registro CNAD AD-00252 y EAD-0046. Supervisión SSF es a MultiMoney como entidad financiera.</td>
+              <td><span class="status-badge status-partial">Parcial</span></td>
+              <td>La ley autoriza la oferta, pero el Estado salvadoreño NO avala, asegura ni indemniza el impago del token.</td>
+            </tr>
+            <tr data-status="confirmed">
+              <td><strong>Liquidación en Stablecoins</strong></td>
+              <td>Landing & DIR</td>
+              <td>Se liquidan en USDT o USDC en la app TOHKN.</td>
+              <td><span class="status-badge status-confirmed">Confirmado</span></td>
+              <td>Riesgo de contraparte con los emisores de stablecoins (Tether/Circle) y custodia cerrada del PSAD.</td>
+            </tr>
+            <tr data-status="inconsistent">
+              <td><strong>Descentralización del Smart Contract</strong></td>
+              <td>Narrativa Blockchain</td>
+              <td>Bytecode en Polygon: Selectores de pausa, congelamiento y transferencia forzada activos. Código no verificado.</td>
+              <td><span class="status-badge status-inconsistent">Falso</span></td>
+              <td>Monarquía administrativa absoluta: el emisor y el PSAD controlan la vida y saldo de cada token.</td>
+            </tr>
+            <tr data-status="inconsistent">
+              <td><strong>Dirección Pública de Contrato Unívoca</strong></td>
+              <td>Prospecto vs Certificación</td>
+              <td>DIR indica 0x6682...0329 en Polygon. Certificación auditó 0x40bC...0559 en BSC Testnet. Landing no muestra ninguna.</td>
+              <td><span class="status-badge status-inconsistent">Inconsistente</span></td>
+              <td>Riesgo de gobernanza técnica: el código de producción no fue auditado directamente en Polygon por el certificador inicial.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 6: Rúbrica Oficial (10 Puntos) -->
+    <section id="rubrica" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">06.</span> Aplicación de la Rúbrica Oficial (Sesión 15)</h2>
+      </div>
+
+      <p style="color: var(--text-muted); margin-bottom: 20px;">
+        Evaluación basada en los 10 criterios de due diligence oficial del programa CS031. Cada criterio se puntúa de 0 a 2 puntos (Total: 20 pts). Puntuación normalizada sobre 10.
+      </p>
+
+      <div class="rubric-grid">
+        <!-- Doge Rubric Card -->
+        <div class="rubric-card">
+          <div class="rubric-header">
+            <div class="rubric-title" style="color: var(--accent-doge);">Dogecoin (DOGE)</div>
+            <div class="rubric-score">15 / 20 <span style="font-size: 1rem; color: var(--text-muted);">(7.5 / 10)</span></div>
+          </div>
+          <div class="rubric-bar-container">
+            <div class="rubric-bar-fill fill-doge" style="width: 75%;"></div>
+          </div>
+          <div class="score-breakdown-list">
+            <div class="sb-row"><span>1. Clarity of unit (1 DOGE = 1 moneda nativa)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>2. Supply / cap honesty (10k DOGE/bloque deterministic)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>3. Allocation & unlocks (Fair launch sin pre-mine)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>4. Sinks / spend (Tarifas de red muy reducidas)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>5. Emission schedule (5 mil millones DOGE/año)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>6. Value accrual falsable (Pura demanda memética)</span><span class="pts">0 / 2</span></div>
+            <div class="sb-row"><span>7. Governance / admin keys (Consenso PoW sin llaves maestras)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>8. Liquidity & market structure (Mercados globales masivos)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>9. Disclosure & docs (Código abierto; sin prospecto corporativo)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>10. Jurisdiction / distribution risk (Riesgo regulatorio global difuso)</span><span class="pts">1 / 2</span></div>
+          </div>
+        </div>
+
+        <!-- MMLTI1 Rubric Card -->
+        <div class="rubric-card">
+          <div class="rubric-header">
+            <div class="rubric-title" style="color: var(--accent-sky);">MultiMoney (MMLTI1)</div>
+            <div class="rubric-score">11 / 20 <span style="font-size: 1rem; color: var(--text-muted);">(5.5 / 10)</span></div>
+          </div>
+          <div class="rubric-bar-container">
+            <div class="rubric-bar-fill fill-mmlti" style="width: 55%;"></div>
+          </div>
+          <div class="score-breakdown-list">
+            <div class="sb-row"><span>1. Clarity of unit (1 Token = $100 deuda senior MultiMoney)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>2. Supply / cap honesty (2M acuñados vs 20k tokens prospecto)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>3. Allocation & unlocks (Lock-up 180 días en código no verificado)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>4. Sinks / spend (Financiamiento de cartera crediticia real)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>5. Emission schedule (Tramo cerrado de $2M a 24 meses)</span><span class="pts">2 / 2</span></div>
+            <div class="sb-row"><span>6. Value accrual falsable (Cupón 6.20% atado a solvencia emisor)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>7. Governance / admin keys (Pause, Freeze, ForcedTransfer activos)</span><span class="pts">0 / 2</span></div>
+            <div class="sb-row"><span>8. Liquidity & market structure (Iliquidez forzosa; sin mercado secundario)</span><span class="pts">0 / 2</span></div>
+            <div class="sb-row"><span>9. Disclosure & docs (DIR 310 pág. pero contrato Unverified en Polygon)</span><span class="pts">1 / 2</span></div>
+            <div class="sb-row"><span>10. Jurisdiction / distribution risk (LEAD/CNAD en ES; Decreto 15-2026 en GT)</span><span class="pts">2 / 2</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Memo Comparativo -->
+    <section id="memo" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">07.</span> Memo Comparativo: ¿Qué Sobrevive sin el Marketing?</h2>
+      </div>
+
+      <div class="memo-container">
+        <div class="memo-meta">
+          <div><strong>Para:</strong> Comité de Inversión y Análisis de Tokenomics (TechFreedom)</div>
+          <div><strong>De:</strong> Equipo de Auditoría de Tokens (Estudiante Universitario CS031)</div>
+          <div><strong>Fecha:</strong> 12 de octubre de 2026</div>
+          <div><strong>Asunto:</strong> Evaluación Estructural: MMLTI1 (Emisión Regulada) vs. Dogecoin (Fair-Launch)</div>
+        </div>
+
+        <div class="memo-content">
+          <h3>1. El Espejismo de la Descentralización Institucional</h3>
+          <p>
+            Al adentrarnos en las finanzas descentralizadas, suele asumirse que la tokenización de activos del mundo real (RWA) representa la maduración de la industria frente al casino especulativo de los meme coins. Sin embargo, al desarmar el bytecode y contrastarlo con los prospectos legales de la plataforma TOHKN, el contraste es brutal. La pregunta fundamental de este análisis no es qué proyecto tiene mejores relaciones públicas, sino qué garantías y qué riesgos sobreviven cuando eliminamos el departamento de mercadeo y los memes de internet.
+          </p>
+
+          <h3>2. Cero Fricción vs. Monarquía Permisionada</h3>
+          <p>
+            Dogecoin es el arquetipo de la fricción cero: nació como una broma en 2013, sin asignación previa a fundadores (<em>zero insider allocation</em>), sin capital de riesgo y sin intermediarios. Cualquiera puede minarlo, transferirlo o auditar su blockchain sin pedirle permiso a nadie. No discrimina geografías ni exige pasaportes.
+          </p>
+          <p>
+            En el extremo opuesto se sitúa <strong>MMLTI1</strong>. Estructurado bajo la Ley de Emisión de Activos Digitales (LEAD) de El Salvador y registrado ante la CNAD bajo el código AD-00252, es un pagaré digital emitido por una entidad financiera tradicional (MultiMoney). Para tocar este activo, el inversionista debe someterse a procesos de KYC/AML, ingresar a una aplicación cerrada y aceptar que sus fondos vivirán en un ecosistema estrictamente permisionado. No es un activo descentralizado; es un producto financiero tradicional que utiliza la máquina virtual de Polygon como un libro mayor contable privado.
+          </p>
+
+          <h3>3. La Paradoja de la Transparencia: Código No Verificado</h3>
+          <p>
+            Aquí encontramos el hallazgo forense más revelador del laboratorio. Mientras que en Dogecoin cada línea de código y regla de consenso es abierta e inmutable, en MMLTI1:
+          </p>
+          <blockquote>
+            1. La landing page comercial oculta la dirección del smart contract.<br>
+            2. El Informe de Certificación independiente auditó un contrato desplegado en BSC Testnet (0x40bC...0559).<br>
+            3. El contrato oficial desplegado en Polygon Mainnet (0x6682...0329) figura como <strong>NO VERIFICADO</strong> en PolygonScan.
+          </blockquote>
+          <p>
+            Esto quiebra el principio fundamental de blockchain: <em>"no confíes, verifica"</em>. El inversionista de MMLTI1 se ve forzado a confiar ciegamente en el prospecto legal y en el certificador, sin posibilidad de auditar de forma abierta el bytecode que custodia su dinero.
+          </p>
+
+          <h3>4. La Realidad del Negocio: Deuda Quirografaria vs. Especulación Pura</h3>
+          <p>
+            Muchos inversionistas minoristas confunden comprar MMLTI1 con comprar acciones de MultiMoney. Los términos oficiales son taxativos: el token confiere exclusivamente un <strong>derecho crediticio quirografario</strong> (pago de capital más 6.20% anual fijo a 24 meses). No otorga derechos de voto, dividendos ni participación patrimonial.
+          </p>
+          <p>
+            Más revelador aún es el margen financiero: MultiMoney levanta fondos al 6.20% nominal (costo total emisor ~6.97% por comisiones de estructuración y listing), pero en el DIR reporta que coloca sus créditos al consumo a una tasa promedio superior al <strong>30% anual</strong>. Los inversionistas de TOHKN proveen fondeo barato para financiar préstamos de alto rendimiento, asumiendo un riesgo crediticio puro sin colateral mientras el emisor retiene un spread masivo.
+          </p>
+
+          <h3>5. Gobernanza y Censura: Las Puertas Traseras de ERC-3643</h3>
+          <p>
+            El estándar ERC-3643 está optimizado para dar cumplimiento al emisor y al regulador, lo que en la práctica significa <strong>eliminar la soberanía del usuario</strong>. Mediante el desmontaje de los selectores EVM, comprobamos que el emisor y el PSAD poseen facultades para:
+          </p>
+          <p>
+            • Pausar todas las transacciones de la red (<code>pause</code>).<br>
+            • Congelar billeteras particulares o saldos específicos (<code>setAddressFrozen</code> / <code>freezePartialTokens</code>).<br>
+            • Transferir fondos fuera de la billetera del usuario sin su firma (<code>forcedTransfer</code>).<br>
+            • Destruir tokens existentes (<code>burn</code>).<br>
+            • Sustituir la lógica completa del contrato a través del <code>ImplementationAuthority</code>.
+          </p>
+          <p>
+            En Dogecoin, nadie puede revertir una transacción ni congelar una billetera. En MMLTI1, el titular de la llave privada no es dueño soberano de su saldo; es un depositante sujeto al control discrecional del emisor.
+          </p>
+
+          <h3>6. Conclusión de la Evaluación</h3>
+          <p>
+            Ninguna de las dos opciones ofrece un almuerzo gratis:
+          </p>
+          <p>
+            <strong>Dogecoin es el rostro honesto del libre mercado especulativo:</strong> no promete rendimientos ficticios, no finge tener un balance contable detrás y no puede confiscarte los fondos. Asumes riesgo de volatilidad de precio, pero tienes libertad técnica absoluta.
+          </p>
+          <p>
+            <strong>MMLTI1 es una emisión corporativa tradicional montada sobre Polygon:</strong> ofrece renta fija predecible bajo el marco de la ley, pero sacrifica la descentralización, impone iliquidez forzosa por 180 días, traslada riesgo de crédito quirografario y mantiene un control autocrático con código no verificado.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Peer Presentation Q&A -->
+    <section id="qa" class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">08.</span> Banco de Preguntas Críticas y Respuestas Técnicas</h2>
+      </div>
+
+      <div class="qa-grid">
+        <div class="qa-item open">
+          <div class="qa-question" onclick="toggleQA(this)">1. ¿Qué diferencia estructural existe entre DOGE y MMLTI1?</div>
+          <div class="qa-answer">
+            DOGE es una criptomoneda nativa sin emisor en una blockchain Proof-of-Work propia, con emisión determinista y liquidez masiva global. MMLTI1 es un token de deuda corporativa emitido en Polygon bajo el estándar ERC-3643 por una entidad financiera regulada en El Salvador, sujeto a restricciones de transferencia y respaldado únicamente por la promesa de pago quirografaria del emisor.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">2. ¿MMLTI1 representa acciones o propiedad sobre MultiMoney?</div>
+          <div class="qa-answer">
+            No. MMLTI1 es deuda senior quirografaria (un pagaré digital). No confiere acciones, derechos de voto, dividendos ni participación en utilidades de MultiMoney. Solo confiere un derecho de crédito para recibir el capital e intereses pactados.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">3. ¿Qué ocurre si MultiMoney entra en insolvencia o no paga?</div>
+          <div class="qa-answer">
+            El token no cuenta con garantías reales, hipotecarias ni fondos de seguro estatal. Al ser deuda quirografaria, los inversionistas concurren como acreedores comunes no garantizados en un proceso de quiebra o liquidación mercantil en El Salvador, asumiendo una pérdida total o parcial del capital.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">4. ¿Por qué el estándar ERC-3643 no equivale automáticamente a seguridad para el usuario?</div>
+          <div class="qa-answer">
+            ERC-3643 está diseñado para garantizar cumplimiento normativo al emisor y al regulador, no para proteger la soberanía del usuario. Incluye funciones que permiten pausar transferencias, congelar billeteras y confiscar tokens unilateralmente (<code>forcedTransfer</code>), eliminando la inmutabilidad de las redes públicas.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">5. ¿Qué puede hacer un administrador del contrato de MMLTI1 con los tokens?</div>
+          <div class="qa-answer">
+            El administrador tiene facultades técnicas para: pausar las transferencias de todos los tenedores (<code>pause</code>), congelar billeteras concretas (<code>setAddressFrozen</code>), bloquear saldos parciales (<code>freezePartialTokens</code>), mover tokens fuera de una billetera sin firma del usuario (<code>forcedTransfer</code>), quemar tokens (<code>burn</code>) y actualizar la lógica completa del contrato mediante el <code>ImplementationAuthority</code>.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">6. ¿Por qué la falta de dirección pública y el código no verificado es un hallazgo crítico?</div>
+          <div class="qa-answer">
+            Porque vulnera el principio de transparencia de blockchain. Si la landing page oculta el contrato y el explorador PolygonScan reporta el código como no verificado (<code>Unverified</code>), el inversionista no puede auditar el código fuente real que custodia su dinero, viéndose obligado a confiar ciegamente en prospectos comerciales y dictámenes externos.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">7. ¿La regulación de la CNAD y la supervisión de la SSF eliminan el riesgo de la inversión?</div>
+          <div class="qa-answer">
+            No. La CNAD autoriza la oferta pública conforme a la LEAD y la SSF supervisa la actividad bancaria/crediticia de MultiMoney. Ningún regulador garantiza el pago, ni asegura el rendimiento, ni indemnizará a los tenedores en caso de quiebra o cesación de pagos del emisor.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">8. ¿Cuál de los dos activos tiene mayor liquidez y por qué?</div>
+          <div class="qa-answer">
+            Dogecoin tiene una liquidez incomparablemente mayor, negociando más de $850 millones de dólares diarios en decenas de exchanges globales con libros profundos. MMLTI1 tiene iliquidez forzosa: cuenta con un lock-up obligatorio de 180 días, no puede listarse en exchanges descentralizados (DEX) y ni TOHKN ni MultiMoney asumen obligación alguna de recompra o provisión de liquidez secundaria.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">9. ¿Cuál activo presenta mayor riesgo de crédito?</div>
+          <div class="qa-answer">
+            MMLTI1. En DOGE no existe riesgo de crédito porque no hay ningún emisor que deba pagar nada; el activo ya existe. En MMLTI1, el 100% de la recuperación del capital depende de la solvencia operativa de MultiMoney para devolver los 2 millones de dólares de capital y los intereses en el plazo de 24 meses.
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-question" onclick="toggleQA(this)">10. ¿Cuál tiene mayor riesgo de censura o bloqueo de fondos?</div>
+          <div class="qa-answer">
+            MMLTI1 tiene el riesgo máximo de censura on-chain. Ante una orden judicial o decisión interna, el administrador puede congelar la billetera o confiscar los tokens. En DOGE, siempre que el usuario custodie sus llaves privadas en una billetera no custodial, ninguna entidad puede bloquear sus fondos en la cadena de bloques.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- References & Limitations -->
+    <section class="content-section">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-num">09.</span> Referencias y Fuentes Consultadas</h2>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>Limitaciones Metodológicas de la Auditoría:</strong> La auditoría del contrato en Polygon se basó en decompilación de bytecode y resolución de selectores EVM debido a que el código Solidity no está verificado en PolygonScan. Asimismo, no se registraron transferencias públicas de usuarios en mainnet al momento de la consulta, lo que sugiere que las operaciones comerciales de suscripción en TOHKN se procesan internamente en las bases de datos del PSAD antes de su liquidación on-chain.
+      </div>
+
+      <div class="key-value-list" style="margin-top: 20px;">
+        <div class="kv-item">
+          <span class="kv-label">Página de Emisiones TOHKN</span>
+          <span class="kv-val"><a href="https://www.tohkn.com/es/issuances" target="_blank">tohkn.com/es/issuances</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Ficha Oficial MMLTI1</span>
+          <span class="kv-val"><a href="https://www.tohkn.com/es/issuances/mmlti1" target="_blank">tohkn.com/es/issuances/mmlti1</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">DIR Oficial y Anexos (310 págs.)</span>
+          <span class="kv-val"><a href="https://www.tohkn.com/assets/documents/issuances/mmlti1/dir-es-mmlti1-annexes.pdf" target="_blank">PDF DIR MMLTI1</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Términos y Condiciones MMLTI1</span>
+          <span class="kv-val"><a href="https://www.tohkn.com/assets/documents/issuances/mmlti1/terms-es-mmlti1.pdf" target="_blank">PDF Términos MMLTI1</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Informe de Certificación (Armor Analytics)</span>
+          <span class="kv-val"><a href="https://www.tohkn.com/assets/documents/issuances/mmlti1/certification-es-mmlti1.pdf" target="_blank">PDF Certificación Armor</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Contrato MMLTI1 en PolygonScan</span>
+          <span class="kv-val"><a href="https://polygonscan.com/address/0x6682b57FA1148b3831aE8610cd6Cbe961d610329" target="_blank">PolygonScan 0x6682...0329</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">ImplementationAuthority en PolygonScan</span>
+          <span class="kv-val"><a href="https://polygonscan.com/address/0x387b9ced9a3e638168dbd4992d06a0b5ba6ece18" target="_blank">PolygonScan 0x387b...ce18</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Registro Público CNAD (El Salvador)</span>
+          <span class="kv-val"><a href="https://cnad.gob.sv/issuances/" target="_blank">cnad.gob.sv/issuances</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Documento Rector Sesión 15 (CS031)</span>
+          <span class="kv-val"><a href="https://docs.google.com/document/d/1nszidR2_ESJoa5iPnO0PPHR865rwhG1hi6x97PZouAM/edit" target="_blank">Google Docs Sesión 15</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">Binance Spot API DOGE/USDT</span>
+          <span class="kv-val"><a href="https://api.binance.com/api/v3/ticker/24hr?symbol=DOGEUSDT" target="_blank">api.binance.com DOGEUSDT</a></span>
+        </div>
+        <div class="kv-item">
+          <span class="kv-label">CoinGecko Dogecoin Overview</span>
+          <span class="kv-val"><a href="https://www.coingecko.com/en/coins/dogecoin" target="_blank">coingecko.com DOGE</a></span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>TechFreedom (CS031) — Lab 13: Token Due Diligence · Universidad Francisco Marroquín / Semestre 8</p>
+    <p style="margin-top: 6px;">Documento entregable generado el 12 de octubre de 2026. Auditoría On-Chain ejecutada mediante RPC Polygon y EVM Disassembly.</p>
+  </footer>
+
+  <script>
+    // Accordion Toggle for Q&A
+    function toggleQA(element) {
+      const item = element.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // Filter Claims Table
+    function filterClaims(type) {
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const rows = document.querySelectorAll('#claims-table tbody tr');
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        if (type === 'all') {
+          row.style.display = '';
+        } else if (type === 'inconsistent') {
+          row.style.display = (status === 'inconsistent' || status === 'unconfirmed') ? '' : 'none';
+        } else if (type === 'confirmed') {
+          row.style.display = (status === 'confirmed' || status === 'partial') ? '' : 'none';
+        }
+      });
+    }
+
+    // Highlight active nav item on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      let current = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
